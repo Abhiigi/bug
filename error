@@ -1,239 +1,995 @@
-
-	Status
-All 7 displayed
-[Expand All]	[Collapse All]
-Show or Hide List Content
-	Add - Pending	Delete - Pending	
-Pending
-Status	
-PENDING
-Status Condition
-
-Initial
-Description	
-Pending
-Transitory State
-
-No
-Access Mode
-
-Pending
-Alert
-
-No
-Monitor Process
-
-Customer Service Request Periodic Monitor Process
-Display Sequence
-10
-Status Reason
-
-Detailed Description	
-
-Show Editor - Detailed Description
-Algorithms
-
-Next Statuses
-
-Options
-
-	Add - Stop Service Setup	Delete - Stop Service Setup	
-Stop Service Setup
-Status	
-STOP-SVC-SET
-Status Condition
-
-Interim
-Description	
-Stop Service Setup
-Transitory State
-
-No
-Access Mode
-
-Stop Service Setup
-Alert
-
-No
-Monitor Process
-
-Display Sequence
-20
-Status Reason
-
-Detailed Description	
-
-Show Editor - Detailed Description
-Algorithms
-
-Next Statuses
-
-Options
-
-	Add - Canceled	Delete - Canceled	
-Canceled
-Status	
-CANCELED
-Status Condition
-
-Final
-Description	
-Canceled
-Transitory State
-
-No
-Access Mode
-
-Canceled
-Alert
-
-No
-Monitor Process
-
-Display Sequence
-30
-Status Reason
-
-Optional
-Detailed Description	
-
-Show Editor - Detailed Description
-Algorithms
-
-Next Statuses
-
-Options
-
-	Add - Stop Service Processing	Delete - Stop Service Processing	
-Stop Service Processing
-Status	
-STOP-SVC-PRC
-Status Condition
-
-Interim
-Description	
-Stop Service Processing
-Transitory State
-
-No
-Access Mode
-
-Stop Service Processing
-Alert
-
-No
-Monitor Process
-
-Display Sequence
-40
-Status Reason
-
-Detailed Description	
-
-Show Editor - Detailed Description
-Algorithms
-
-Next Statuses
-
-Options
-
-	Add - Waiting For Completion	Delete - Waiting For Completion	
-Waiting For Completion
-Status	
-WAIT-FOR-CMP
-Status Condition
-
-Interim
-Description	
-Waiting For Completion
-Transitory State
-
-No
-Access Mode
-
-Waiting For Completion
-Alert
-
-No
-Monitor Process
-
-Customer Service Request Periodic Monitor Process
-Display Sequence
-50
-Status Reason
-
-Detailed Description	
-
-Show Editor - Detailed Description
-Algorithms
-
-Next Statuses
-
-Options
-
-	Add - Processing Issues	Delete - Processing Issues	
-Processing Issues
-Status	
-PROC-ISSUES
-Status Condition
-
-Interim
-Description	
-Processing Issues
-Transitory State
-
-No
-Access Mode
-
-Processing Issues
-Alert
-
-No
-Monitor Process
-
-Display Sequence
-60
-Status Reason
-
-Detailed Description	
-
-Show Editor - Detailed Description
-Algorithms
-
-Next Statuses
-
-Options
-
-	Add - Completed	Delete - Completed	
-Completed
-Status	
-COMPLETED
-Status Condition
-
-Final
-Description	
-Completed
-Transitory State
-
-No
-Access Mode
-
-Complete
-Alert
-
-No
-Monitor Process
-
-Display Sequence
-70
-Status Reason
-
-Detailed Description	
-
-Show Editor - Detailed Description
-Algorithms
-
-Next Statuses
-
-Options
-
+package cm
+
+import com.splwg.base.api.serviceScript.GenericGroovyObject
+
+//System generated imports
+import com.splwg.base.api.sql.PreparedStatementQuery
+import com.splwg.ccb.domain.customerServiceRequestManagement.customerServiceRequestPerson.entity.CustomerServiceRequestPerson_Id
+import com.splwg.ccb.domain.customerServiceRequestManagement.customerServiceRequestAccount.entity.CustomerServiceRequestAccount_Id
+import com.splwg.ccb.domain.customerServiceRequestManagement.customerServiceRequestServiceAgreement.entity.CustomerServiceRequestServiceAgreement
+import com.splwg.ccb.domain.customerServiceRequestManagement.customerServiceRequestServiceAgreement.entity.CustomerServiceRequestServiceAgreement_Id
+import com.splwg.base.api.sql.SQLResultRow
+//End of system generated imports
+//System generated imports
+import com.splwg.base.api.datatypes.DateFormat
+//End of system generated imports
+
+
+/** Stop Service - Review and Submit - Post-process Custom */
+
+class CMSStpRvwPst extends GenericGroovyObject {
+
+/* 10: Remove empty collection  entries  to avoid NullPointerException on getRoutingMethod
+
+    //terminate with error (90003,1603 %1="parm/stopServiceOptionsCustomElements/meterAction");
+    move null to "parm/mainPerson/personNameGroup/personName[nameType = $BLANK and entityName = $BLANK]";
+    move null to "parm/mainPerson/phoneNumbers/personContactDetail[personContactType = $BLANK and contactDetailValue = $BLANK ]";
+    move null to "parm/mainPerson/faxNumbers/personContactDetail[personContactType = $BLANK and contactDetailValue = $BLANK ]";
+    move null to "parm/mainPerson/emailAddresses/personContactDetail[personContactType = $BLANK and contactDetailValue = $BLANK ]";
+    move null to "parm/mainPerson/additionalContacts/personContactDetail[personContactType = $BLANK and contactDetailValue = $BLANK]";
+    move null to "parm/mainPerson/personIdentifierGroup/personIdentifier[idType = $BLANK and personIdNumber = $BLANK]";
+    move null to "parm/mainPerson/personSeasAddrGroup/personSeasonalAddress[startMonthDay = $BLANK and endMonthDay = $BLANK and effectiveStatus = $BLANK and country = $BLANK and address1 = $BLANK]";
+    move null to "parm/otherAccountDetails/accountMessageGroup/accountMessage[billMessage=$BLANK and billMessageType=$BLANK]";
+    
+    //terminate with error(90003, 11 %1="string(parm/stopServiceOptionsCustomElements/cmPanel1ValidationElements/cmIsMarkForCorrection)");
+    
+    
+    //ADO : 1277684 past date validation start
+    if("xs:date(parm/stpSvcStopServiceDetails/serviceStopDate) < xs:date($PROCESS-DATE) ")//24/8
+    
+    if("string(parm/stopServiceOptionsCustomElements/cmPanel1ValidationElements/meterExchangeMessageDetails) != $BLANK")
+      	terminate with error(90003, 500 %1="string(parm/stopServiceOptionsCustomElements/cmPanel1ValidationElements/meterExchangeMessageDetails)");
+    end-if;
+    
+    end-if;//24/8
+    // ADO : 1277684 past date validation end
+    //terminate with error(90003, 500 %1='Executed Stop PostProc');
+*/
+
+/* 20: Prepare
+
+    // Skip main processing for 'previous' action
+    move "string(parm/processProgress/userAction)" to $userAction;
+    if ("string($userAction) = 'PREV' or string($userAction) = 'TRPV'")
+         terminate;
+    end-if;
+    // Read Account
+    move "parm/accountId" to "C1-Account/accountId";
+    invokeBO 'C1-Account' using "C1-Account" for read;
+    // Prepare CS request account BO
+    declareBO "parm/stopServiceRequestTypeDetails/accountBO" as 'csReqAcc_schema';
+    move "parm/custSvcReq/customerServiceRequestId" to "csReqAcc_schema/custSvcReqId";
+    move "parm/stopServiceRequestTypeDetails/accountBO" to "csReqAcc_schema/bo";
+    move "C1-Account" to "csReqAcc_schema";
+    move "C1-Account" to "csReqAcc_schema/accountAutomaticPaymentGroup";
+    move "C1-Account" to "csReqAcc_schema/accountPersonGroup";
+    move "C1-Account" to "csReqAcc_schema/accountNonCashDepositGroup";
+    move "C1-Account" to "csReqAcc_schema/accountMessageGroup";
+    move "C1-Account" to "csReqAcc_schema/accountCharacteristicGroup";
+    move "C1-Account" to "csReqAcc_schema/accountAlertGroup";
+    move "C1-Account/version" to "csReqAcc_schema/accountVersion";
+    move 'C1UP' to "csReqAcc_schema/csrAccountActionFlag";
+    // Determine customer class control group
+    move "C1-Account/customerClass" to $customerClass;
+    move "parm/stopServiceRequestTypeDetails/accountControls" to $ccControlGroup;
+    // Determine person control group
+    move "parm/mainPerson/personOrBusiness" to $personOrBusiness;
+    if ("string($personOrBusiness) = 'P'")
+         move "parm/stopServiceRequestTypeDetails/personBusinessControls/personControls" to $personControlGroup;
+    else
+         move "parm/stopServiceRequestTypeDetails/personBusinessControls/businessControls" to $personControlGroup;
+    end-if;
+    // Set switch in the parent to hold child CS request transition
+    declareBO "parm/stopServiceRequestTypeDetails/transactionalBo" as 'csr_schema';
+    move "parm/custSvcReq/customerServiceRequestId" to "csr_schema/customerServiceRequestId";
+    invokeBO "parm/stopServiceRequestTypeDetails/transactionalBo" using "csr_schema" for read;
+    move 'false' to "csr_schema/childCanProceed";
+    move "parm/personId" to "csr_schema/mainPersonId";
+    move "parm/accountId" to "csr_schema/accountId";
+    invokeBO "parm/stopServiceRequestTypeDetails/transactionalBo" using "csr_schema" for fastUpdate;
+*/
+
+/* 30: Main Person
+
+    move "parm/personId" to $personId;
+    //
+    // Process person attributes
+    move null to "C1SSAccDtPsP";
+    // Supported ID Types
+    move "parm/stopServiceRequestTypeDetails/custSvcRequestType" to "C1SSRetIDTyp/input/custSvcRequestType";
+    move "parm/mainPerson/personOrBusiness" to "C1SSRetIDTyp/input/personOrBusiness";
+    move 'true' to "C1SSRetIDTyp/input/isMainCustomer";
+    move 'false' to "C1SSRetIDTyp/input/isPrimaryId";
+    move "$personId" to "C1SSRetIDTyp/input/personId";
+    invokeSS 'C1SSRetIDTyp' using "C1SSRetIDTyp";
+    move "C1SSRetIDTyp/output" to "C1SSAccDtPsP/input";
+    // CS Request Person BO
+    move "parm/stopServiceRequestTypeDetails/personBO" to "C1SSAccDtPsP/input/personBO";
+    // Person/Business Controls
+    move "$personControlGroup" to "C1SSAccDtPsP/input/control";
+    // CS Request Person Action
+    move 'C1UP' to "C1SSAccDtPsP/input/csrPersonActionFlag";
+    // CS Request
+    move "parm/custSvcReq/customerServiceRequestId" to "C1SSAccDtPsP/input/custSvcReqId";
+    // CS Request Person ID - Main Person
+    move "parm/custSvcReq/custSvcReqPersonId" to "C1SSAccDtPsP/input/custSvcReqPersonId";
+    // Main Person ID
+    move "$personId" to "C1SSAccDtPsP/input/personId";
+    // Panel values - Main Person
+    move "parm/mainPerson" to "C1SSAccDtPsP/input/panel";
+    // Person Characteristics Control
+    move "$personControlGroup/personCharacteristics" to "C1SSAccDtPsP/input/control/personCharacteristics";
+    invokeSS 'C1SSAccDtPsP' using "C1SSAccDtPsP";
+    move "C1SSAccDtPsP/output/custSvcReqPersonId" to "parm/custSvcReq/custSvcReqPersonId";
+    //
+    // Process Paperless
+    if ("string(parm/mainPerson/shouldDisplayPaperless) = 'true'")
+         if ("string(parm/mainPerson/paperlessBilling/isPaperlessEnrolled) = 'true'")
+              move "$personControlGroup/paperlessBillingBillRouteType" to "csReqAcc_schema/accountPersonGroup/accountPerson[personId = $personId]/billRouteType";
+         end-if;
+    end-if;
+    //
+    // Process mailing address
+    move null to "csReqAcc_schema/accountPersonGroup/accountPerson[personId = $personId]/personAddressOverride";
+    move "parm/mainPerson/mailingAddress/billAddressSource" to "csReqAcc_schema/accountPersonGroup/accountPerson[personId = $personId]/billAddressSource";
+    if ("string(parm/mainPerson/mailingAddress/billAddressSource) = 'ACOV'")
+         move "parm/mainPerson/mailingAddress" to "csReqAcc_schema/accountPersonGroup/accountPerson[personId = $personId]/+personAddressOverride";
+    end-if;
+*/
+
+/* 40: Account / Person
+
+    //terminate with error(90003, 11 %1='1111');
+    // Skip account/personprocessing if section was hidden
+    
+    if ("string(parm/shouldDisplayAccountPerson) = 'false'")
+         goto 50;
+    end-if;
+    //
+    // Account/Person controls
+    
+    //terminate with error(90003, 11 %1='2222');
+    
+    move "parm/accountPersonGroup/shouldDisplayFinanciallyResponsible" to $shouldDisplayFinanciallyResponsible;
+    move "parm/accountPersonGroup/shouldDisplayThirdPartyGuarantor" to $shouldDisplayThirdPartyGuarantor;
+    move "parm/accountPersonGroup/shouldDisplayReceiveCopyOfBill" to $shouldDisplayReceiveCopyOfBill;
+    move "parm/accountPersonGroup/shouldDisplayReceivesNotification" to $shouldDisplayReceivesNotification;
+    move "parm/accountPersonGroup/shouldDisplayAllowPreference" to $shouldDisplayAllowPreference;
+    
+    
+    
+    //
+    // Process account/person from panel
+    invokeBS 'F1-InstallationOptions' using "F1-InstallationOptions";
+    move "F1-InstallationOptions/installationOptionId" to "C1-InstallationOptions/installationOptionId";
+    invokeBO 'C1-InstallationOptions' using "C1-InstallationOptions" for read;
+    
+    
+    
+    // Remove empty account/person entries
+    move null to "parm/accountPersonGroup/accountPerson[personId = $BLANK and isExisting != 'false']";
+    for ($accountPerson in "parm/accountPersonGroup/accountPerson")
+         // Account/Person - Person ID
+         move "$accountPerson/personId" to $personId;
+         //
+         // Process person attributes
+         move null to "C1SSAccDtPsP";
+         // Supported ID Types
+         move "parm/stopServiceRequestTypeDetails/custSvcRequestType" to "C1SSRetIDTyp/input/custSvcRequestType";
+         move "parm/mainPerson/personOrBusiness" to "C1SSRetIDTyp/input/personOrBusiness";
+         move 'false' to "C1SSRetIDTyp/input/isMainCustomer";
+         move 'false' to "C1SSRetIDTyp/input/isPrimaryId";
+         move "$personId" to "C1SSRetIDTyp/input/personId";
+         invokeSS 'C1SSRetIDTyp' using "C1SSRetIDTyp";
+         move "C1SSRetIDTyp/output" to "C1SSAccDtPsP/input";
+         // CS Request Person BO
+         move "parm/stopServiceRequestTypeDetails/personBO" to "C1SSAccDtPsP/input/personBO";
+         // CS Request
+         move "parm/custSvcReq/customerServiceRequestId" to "C1SSAccDtPsP/input/custSvcReqId";
+         // Person Characteristics Control
+         move "$personControlGroup/personCharacteristics" to "C1SSAccDtPsP/input/control/personCharacteristics";
+         // Panel values - Other Person
+         move "$accountPerson" to "C1SSAccDtPsP/input/panel";
+         if("string($accountPerson/pfIdentificationValue) != $BLANK")
+         	move "$accountPerson/pfIdentificationValue" to "C1SSAccDtPsP/input/panel/identificationValue";
+         end-if;
+         if ("string($personId) != $BLANK and count(C1-Account/accountPerson[personId = $personId]) > 0")
+              // Process account/person attributes
+              move "$accountPerson/accountRelationshipType" to "csReqAcc_schema/accountPersonGroup/accountPerson[personId = $personId]/accountRelationshipType";
+              if ("string($shouldDisplayFinanciallyResponsible) = 'true'")
+                   move "$accountPerson/isFinanciallyResponsible" to "csReqAcc_schema/accountPersonGroup/accountPerson[personId = $personId]/isFinanciallyResponsible";
+              end-if;
+              if ("string($shouldDisplayThirdPartyGuarantor) = 'true'")
+                   move "$accountPerson/isThirdPartyGuarantor" to "csReqAcc_schema/accountPersonGroup/accountPerson[personId = $personId]/isThirdPartyGuarantor";
+              end-if;
+              if ("string($shouldDisplayReceiveCopyOfBill) = 'true'")
+                   move "$accountPerson/shouldReceiveCopyOfBill" to "csReqAcc_schema/accountPersonGroup/accountPerson[personId = $personId]/shouldReceiveCopyOfBill";
+                   if ("string($accountPerson/shouldReceiveCopyOfBill) = 'true'")
+                        move "$accountPerson/billFormat" to "csReqAcc_schema/accountPersonGroup/accountPerson[personId = $personId]/billFormat";
+                        move "$accountPerson/numberOfBillCopies" to "csReqAcc_schema/accountPersonGroup/accountPerson[personId = $personId]/numberOfBillCopies";
+                   end-if;
+              end-if;
+              if ("string($shouldDisplayReceivesNotification) = 'true'")
+                   move "$accountPerson/receivesNotification" to "csReqAcc_schema/accountPersonGroup/accountPerson[personId = $personId]/receivesNotification";
+              end-if;
+              if ("string($shouldDisplayAllowPreference) = 'true'")
+                   move "$accountPerson/allowPreference" to "csReqAcc_schema/accountPersonGroup/accountPerson[personId = $personId]/allowPreference";
+              end-if;
+              //
+              // Process person attributes
+              move 'C1UP' to "C1SSAccDtPsP/input/csrPersonActionFlag";
+              // Person Id
+              move "$personId" to "C1SSAccDtPsP/input/personId";
+              invokeSS 'C1SSAccDtPsP' using "C1SSAccDtPsP";
+              //
+              // Stamp CS request person ID to account/person row
+              move "C1SSAccDtPsP/output/custSvcReqPersonId" to "csReqAcc_schema/accountPersonGroup/accountPerson[personId = $personId]/custSvcReqPersonId";
+              //
+              // Process Paperless
+              if ("string($accountPerson/shouldDisplayPaperless) = 'true'")
+                   if ("string($accountPerson/paperlessBilling/isPaperlessEnrolled) = 'true'")
+                        move "$personControlGroup/paperlessBillingBillRouteType" to "csReqAcc_schema/accountPersonGroup/accountPerson[personId = $personId]/billRouteType";
+                   end-if;
+              end-if;
+              //
+              // Default Bill Route Type
+              if ("string(csReqAcc_schema/accountPersonGroup/accountPerson[personId = $personId]/shouldReceiveCopyOfBill) = 'true' and string(csReqAcc_schema/accountPersonGroup/accountPerson[personId = $personId]/billRouteType) = $BLANK")
+                   move "C1-InstallationOptions/billRouteType" to "csReqAcc_schema/accountPersonGroup/accountPerson[personId = $personId]/billRouteType";
+              end-if;
+              //
+              // Process mailing address
+              move null to "csReqAcc_schema/accountPersonGroup/accountPerson[personId = $personId]/personAddressOverride";
+              move "$accountPerson/mailingAddress/billAddressSource" to "csReqAcc_schema/accountPersonGroup/accountPerson[personId = $personId]/billAddressSource";
+              if ("string($accountPerson/mailingAddress/billAddressSource) = 'ACOV'")
+                   move "$accountPerson/mailingAddress" to "csReqAcc_schema/accountPersonGroup/accountPerson[personId = $personId]/+personAddressOverride";
+              end-if;
+         else
+              // Process account/person attributes
+              move "$personId" to "csReqAcc_schema/accountPersonGroup/+accountPerson/personId";
+              move "$accountPerson/accountRelationshipType" to "csReqAcc_schema/accountPersonGroup/accountPerson[last()]/accountRelationshipType";
+              if ("string($shouldDisplayFinanciallyResponsible) = 'true'")
+                   move "$accountPerson/isFinanciallyResponsible" to "csReqAcc_schema/accountPersonGroup/accountPerson[last()]/isFinanciallyResponsible";
+              end-if;
+              if ("string($shouldDisplayThirdPartyGuarantor) = 'true'")
+                   move "$accountPerson/isThirdPartyGuarantor" to "csReqAcc_schema/accountPersonGroup/accountPerson[last()]/isThirdPartyGuarantor";
+              end-if;
+              if ("string($shouldDisplayReceiveCopyOfBill) = 'true'")
+                   move "$accountPerson/shouldReceiveCopyOfBill" to "csReqAcc_schema/accountPersonGroup/accountPerson[last()]/shouldReceiveCopyOfBill";
+                   if ("string($accountPerson/shouldReceiveCopyOfBill) = 'true'")
+                        move "$accountPerson/billFormat" to "csReqAcc_schema/accountPersonGroup/accountPerson[last()]/billFormat";
+                        move "$accountPerson/numberOfBillCopies" to "csReqAcc_schema/accountPersonGroup/accountPerson[last()]/numberOfBillCopies";
+                   end-if;
+              end-if;
+              if ("string($shouldDisplayReceivesNotification) = 'true'")
+                   move "$accountPerson/receivesNotification" to "csReqAcc_schema/accountPersonGroup/accountPerson[last()]/receivesNotification";
+              end-if;
+              if ("string($shouldDisplayAllowPreference) = 'true'")
+                   move "$accountPerson/allowPreference" to "csReqAcc_schema/accountPersonGroup/accountPerson[last()]/allowPreference";
+              end-if;
+              //
+              // Process person attributes
+              if ("string($personId) = $BLANK")
+                   move 'C1AD' to "C1SSAccDtPsP/input/csrPersonActionFlag";
+              else
+                   move "$personId" to "C1SSAccDtPsP/input/personId";
+                   move 'C1UP' to "C1SSAccDtPsP/input/csrPersonActionFlag";
+              end-if;
+              invokeSS 'C1SSAccDtPsP' using "C1SSAccDtPsP";
+              //
+              // Stamp CS request person ID to account/person row
+              move "C1SSAccDtPsP/output/custSvcReqPersonId" to "csReqAcc_schema/accountPersonGroup/accountPerson[last()]/custSvcReqPersonId";
+              //
+              // Process Paperless
+              if ("string($accountPerson/shouldDisplayPaperless) = 'true'")
+                   if ("string($accountPerson/paperlessBilling/isPaperlessEnrolled) = 'true'")
+                        move "$personControlGroup/paperlessBillingBillRouteType" to "csReqAcc_schema/accountPersonGroup/accountPerson[last()]/billRouteType";
+                   end-if;
+              end-if;
+              //
+              // Default Bill Route Type
+              if ("string($accountPerson/shouldReceiveCopyOfBill) = 'true' and string(csReqAcc_schema/accountPersonGroup/accountPerson[last()]/billRouteType) = $BLANK")
+                   move "C1-InstallationOptions/billRouteType" to "csReqAcc_schema/accountPersonGroup/accountPerson[last()]/billRouteType";
+              end-if;
+              //
+              // Process mailing address
+              move "$accountPerson/mailingAddress/billAddressSource" to "csReqAcc_schema/accountPersonGroup/accountPerson[last()]/billAddressSource";
+              if ("string($accountPerson/mailingAddress/billAddressSource) = 'ACOV'")
+                   move "$accountPerson/mailingAddress" to "csReqAcc_schema/accountPersonGroup/accountPerson[last()]/+personAddressOverride";
+              end-if;
+         end-if;
+    end-for;
+    //
+    // Process deleted account/person
+    for ($element in "csReqAcc_schema/accountPersonGroup/accountPerson[personId != $BLANK and isMainCustomer = 'false']")
+         move "string($element/personId)" to $apPersonId;
+         if ("count(parm/accountPersonGroup/accountPerson[personId = $apPersonId]) = 0")
+              move null to "csReqAcc_schema/accountPersonGroup/accountPerson[personId = $apPersonId]";
+         end-if;
+    end-for;
+*/
+
+/* 50: Account - Process auto pay
+
+    // Skip auto pay processing if section was hidden
+    if ("string(parm/shouldDisplayAutoPay) != 'true'")
+         goto 70;
+    end-if;
+    move "parm/accountAutomaticPaymentGroup/shouldDisplayMaxWithdrawalAmount" to $shouldDisplayMaxWithdrawalAmount;
+    move "string(parm/accountAutomaticPaymentGroup/isAutoPay)" to $isAutoPay;
+    move "string(parm/accountAutomaticPaymentGroup/isAutoPayActive)" to $isAutoPayActive;
+    move "string(parm/accountAutomaticPaymentGroup/accountAutoPayId)" to $accountAutoPayId;
+    move "string(parm/accountAutomaticPaymentGroup/isAutoPayChange)" to $isAutoPayChange;
+    move 'false' to $addNewAutopay;
+    if ("string($isAutoPay) = 'false'")
+         // Active auto pay exists
+         if ("string($isAutoPayActive) = 'true'")
+              // End the active auto pay
+              move "$CURRENT-DATE" to "csReqAcc_schema/accountAutomaticPaymentGroup/accountAutopay[accountAutoPayId = $accountAutoPayId]/endDate";
+         end-if;
+    else
+         // Active auto pay exists
+         if ("string($isAutoPayActive) = 'true'")
+              // Change Auto Pay = 'true'
+              if ("string($isAutoPayChange) = 'true'")
+                   // End the active auto pay
+                   move "$CURRENT-DATE" to "csReqAcc_schema/accountAutomaticPaymentGroup/accountAutopay[accountAutoPayId = $accountAutoPayId]/endDate";
+                   // Add new auto pay
+                   move 'true' to $addNewAutopay;
+              end-if;
+         else
+              // Add new auto pay
+              move 'true' to $addNewAutopay;
+         end-if;
+    end-if;
+    // Add new auto pay as needed
+    if ("string($addNewAutopay) = 'true'")
+         move "parm/accountAutomaticPaymentGroup/autoPayType" to $autoPayType;
+         // New auto pay start date = current date + 1 day
+         move "$CURRENT-DATE" to "F1-DateMath/beginDate";
+         move '1' to "F1-DateMath/days";
+         move 'F1AD' to "F1-DateMath/option";
+         invokeBS 'F1-DateMath' using "F1-DateMath";
+         move "F1-DateMath/endDate" to $newAutoPayStartDate;
+         // Add new - bank auto pay
+         if ("string($autoPayType) = 'C1BN'")
+              move "$newAutoPayStartDate" to "csReqAcc_schema/accountAutomaticPaymentGroup/+accountAutopay/startDate";
+              move "parm/accountAutomaticPaymentGroup/bankAutoPay/autopaySource" to "csReqAcc_schema/accountAutomaticPaymentGroup/accountAutopay[last()]/autopaySource";
+              move "parm/accountAutomaticPaymentGroup/bankAutoPay/externalAccountId" to "csReqAcc_schema/accountAutomaticPaymentGroup/accountAutopay[last()]/externalAccountId";
+              move "parm/accountAutomaticPaymentGroup/bankAutoPay/name" to "csReqAcc_schema/accountAutomaticPaymentGroup/accountAutopay[last()]/entityName";
+              if ("string($shouldDisplayMaxWithdrawalAmount) = 'true'")
+                   move "parm/accountAutomaticPaymentGroup/bankAutoPay/maxWithdrawAmount" to "csReqAcc_schema/accountAutomaticPaymentGroup/accountAutopay[last()]/autopayMaxWithdrawalAmount";
+              end-if;
+         end-if;
+         // Add new - credit card auto pay
+         if ("string($autoPayType) = 'C1CC'")
+              move "$newAutoPayStartDate" to "csReqAcc_schema/accountAutomaticPaymentGroup/+accountAutopay/startDate";
+              move "parm/accountAutomaticPaymentGroup/creditCardAutoPay/creditCardAutoPayType" to "csReqAcc_schema/accountAutomaticPaymentGroup/accountAutopay[last()]/autopaySource";
+              move "parm/accountAutomaticPaymentGroup/creditCardAutoPay/creditCardNumber" to "csReqAcc_schema/accountAutomaticPaymentGroup/accountAutopay[last()]/externalAccountId";
+              // Set Expiry Date to the end of the month
+    	 	  default $month;
+    		  if ("xs:integer(parm/accountAutomaticPaymentGroup/creditCardAutoPay/expirationMonth) < 10")
+    			 move "concat('0', xs:integer(parm/accountAutomaticPaymentGroup/creditCardAutoPay/expirationMonth))" to $month;
+              else
+    			 move "parm/accountAutomaticPaymentGroup/creditCardAutoPay/expirationMonth" to $month;
+    		  end-if;
+              move "concat(parm/accountAutomaticPaymentGroup/creditCardAutoPay/expirationYear, '-', $month, '-01')" to "F1-DateMath/beginDate";
+              move 'F1FL' to "F1-DateMath/option";
+              invokeBS 'F1-DateMath' using "F1-DateMath";
+              move "F1-DateMath/endDate" to "csReqAcc_schema/accountAutomaticPaymentGroup/accountAutopay[last()]/expireDate";
+              move "parm/accountAutomaticPaymentGroup/creditCardAutoPay/name" to "csReqAcc_schema/accountAutomaticPaymentGroup/accountAutopay[last()]/entityName";
+              if ("string($shouldDisplayMaxWithdrawalAmount) = 'true'")
+                   move "parm/accountAutomaticPaymentGroup/creditCardAutoPay/maxWithdrawAmount" to "csReqAcc_schema/accountAutomaticPaymentGroup/accountAutopay[last()]/autopayMaxWithdrawalAmount";
+              end-if;
+         end-if;
+    end-if;
+*/
+
+/* 60: Account - Other Details
+
+    //
+    // Bill After Date
+    if ("string(parm/otherAccountDetails/shouldDisplayBillAfterDate) = 'true'")
+         move "parm/otherAccountDetails/billAfter" to "csReqAcc_schema/billAfter";
+    end-if;
+    //
+    // Account Comment
+    if ("string(parm/otherAccountDetails/shouldDisplayComment) = 'true'")
+         move "parm/otherAccountDetails/alertInformation" to "csReqAcc_schema/alertInformation";
+    end-if;
+    //
+    // Bill Messages
+    if ("string(parm/otherAccountDetails/shouldDisplayBillMessage) = 'true'")
+         move null to "csReqAcc_schema/accountMessageGroup";
+         move "parm/otherAccountDetails/accountMessageGroup" to "csReqAcc_schema/accountMessageGroup";
+    end-if;
+*/
+
+/* 70: Account - Process characteristics
+
+    // Characteristic
+    for ($char in "parm/otherAccountDetails/accountCharacteristicGroup/accountCharacteristic")
+         move "$char/characteristicType" to $characteristicType;
+         move "$char/effectiveDate" to $effectiveDate;
+         // If char value is blank, delete chars of this type.
+         // Otherwise, process char value
+         if ("string($char/characteristicValue) = $BLANK and string($char/adhocCharacteristicValue) = $BLANK and string($char/characteristicValueForeignKey1) = $BLANK")
+              if ("string($char/showExistingEffectiveValue) = 'true'")
+                   move null to "csReqAcc_schema/accountCharacteristicGroup/accountCharacteristic[characteristicType = $characteristicType]";
+              end-if;
+         else
+              // If no existing char, add new char
+              // Otherwise, handle existing char
+              if ("count(csReqAcc_schema/accountCharacteristicGroup/accountCharacteristic[characteristicType = $characteristicType and effectiveDate = $effectiveDate]) = 0")
+                   move "$char" to "csReqAcc_schema/accountCharacteristicGroup/+accountCharacteristic";
+              else
+                   move "$ccControlGroup/accountCharacteristics/accountCharacteristic[characteristicType = $characteristicType]/existingValuesHandling" to $existingValuesHandling;
+                   // Leave Untouched
+                   if ("string($existingValuesHandling) = 'C1UN'")
+                        // If char is effective today, update char value
+                        // Otherwise, add new char, effective date = current date
+                        if ("$effectiveDate = $CURRENT-DATE")
+                             move "$char" to "csReqAcc_schema/accountCharacteristicGroup/accountCharacteristic[characteristicType = $characteristicType and effectiveDate = $effectiveDate]";
+                        else
+                             move "$char" to "csReqAcc_schema/accountCharacteristicGroup/+accountCharacteristic";
+                             move "$CURRENT-DATE" to "csReqAcc_schema/accountCharacteristicGroup/accountCharacteristic[last()]/effectiveDate";
+                        end-if;
+                   end-if;
+                   // Update Value Only
+                   if ("string($existingValuesHandling) = 'C1VA'")
+                        move "$char" to "csReqAcc_schema/accountCharacteristicGroup/accountCharacteristic[characteristicType = $characteristicType and effectiveDate = $effectiveDate]";
+                   end-if;
+                   // Update Value and Date
+                   if ("string($existingValuesHandling) = 'C1VD'")
+                        move "$char" to "csReqAcc_schema/accountCharacteristicGroup/accountCharacteristic[characteristicType = $characteristicType and effectiveDate = $effectiveDate]";
+                        move "$CURRENT-DATE" to "csReqAcc_schema/accountCharacteristicGroup/accountCharacteristic[characteristicType = $characteristicType and effectiveDate = $effectiveDate]/effectiveDate";
+                   end-if;
+              end-if;
+         end-if;
+    end-for;
+*/
+
+/* 80: Account  - Perform BO action
+
+    // Store CS request account snapshot for later update
+    declareBO "parm/stopServiceRequestTypeDetails/accountBO" as 'csReqAccTemp_schema';
+    move "csReqAcc_schema" to "csReqAccTemp_schema";
+    // Blank out child collection before add to prevent 'CS_REQ_ACCT_ID missing error'
+    move null to "csReqAcc_schema/accountPersonGroup/accountPerson";
+    move null to "csReqAcc_schema/accountAutomaticPaymentGroup/accountAutopay";
+    move null to "csReqAcc_schema/accountMessageGroup";
+    move null to "csReqAcc_schema/accountCharacteristicGroup";
+    // Add CS request account
+    invokeBO "parm/stopServiceRequestTypeDetails/accountBO" using "csReqAcc_schema" for add;
+    
+    
+    move "csReqAcc_schema/custSvcReqAccountId" to $custSvcReqAccountId;
+    // Populate child collections
+    move "csReqAccTemp_schema/accountPersonGroup" to "csReqAcc_schema/accountPersonGroup";
+    move "csReqAccTemp_schema/accountAutomaticPaymentGroup" to "csReqAcc_schema/accountAutomaticPaymentGroup";
+    move "csReqAccTemp_schema/accountMessageGroup" to "csReqAcc_schema/accountMessageGroup";
+    move "csReqAccTemp_schema/accountCharacteristicGroup" to "csReqAcc_schema/accountCharacteristicGroup";
+    // Populate CS request account ID of collections
+    move "$custSvcReqAccountId" to "csReqAcc_schema/accountPersonGroup/accountPerson/custSvcReqAccountId";
+    move "$custSvcReqAccountId" to "csReqAcc_schema/accountAutomaticPaymentGroup/accountAutopay/custSvcReqAccountId";
+    move "$custSvcReqAccountId" to "csReqAcc_schema/accountMessageGroup/accountMessage/custSvcReqAccountId";
+    move "$custSvcReqAccountId" to "csReqAcc_schema/accountCharacteristicGroup/accountCharacteristic/custSvcReqAccountId";
+    // Update CS request account
+    invokeBO "parm/stopServiceRequestTypeDetails/accountBO" using "csReqAcc_schema" for update;
+    // Populate CS request account ID in the PF schema
+    move "$custSvcReqAccountId" to "parm/custSvcReq/custSvcReqAccountId";
+*/
+
+/* 90: SA - Process Services  to Stop
+
+    // Process Services to Stop
+    invokeSS 'C1STSADtPst' using "parm";
+*/
+
+/* 100: Create CS Request Related Object
+
+    // Add related objects to the CSR
+    move null to "C1-CSRequestRelatedObjectLite";
+    move "parm/custSvcReq/customerServiceRequestId" to "C1-CSRequestRelatedObjectLite/customerServiceRequestId";
+    invokeBO 'C1-CSRequestRelatedObjectLite' using "C1-CSRequestRelatedObjectLite" for read;
+    
+    for ($premDetail in "parm/stpSvcPremBasedServicesDetails/premBasedSAs/premBasedSADetail")
+    	if ("xs:boolean($premDetail/stopPremise)")
+    	   // Add Premise to the Related Object
+    	   move 'C1PF' to "C1-CSRequestRelatedObjectLite/divCSRequestRelatedObject/+csRequestRelatedObject/csRequestRelatedObjectType";
+    	   move 'PREMISE' to "C1-CSRequestRelatedObjectLite/divCSRequestRelatedObject/csRequestRelatedObject[last()]/maintenanceObject";
+    	   move "$premDetail/premId" to "C1-CSRequestRelatedObjectLite/divCSRequestRelatedObject/csRequestRelatedObject[last()]/primaryKeyValue1";
+    	end-if;
+    end-for;
+    
+    invokeBO 'C1-CSRequestRelatedObjectLite' using "C1-CSRequestRelatedObjectLite" for fastUpdate;
+*/
+
+/* 110: Nudge parent CS request
+
+    // Set Ready Flag to start service
+    declareBO "parm/stopServiceRequestTypeDetails/transactionalBo" as 'csr_schema';
+    move "parm/custSvcReq/customerServiceRequestId" to "csr_schema/customerServiceRequestId";
+    invokeBO "parm/stopServiceRequestTypeDetails/transactionalBo" using "csr_schema" for read;
+    move 'true' to "csr_schema/isSetupComplete";
+    move 'true' to "csr_schema/childCanProceed";
+    move "parm/otherAccountDetails/customerContact/customerContactComments" to "csr_schema/customerContactComments";
+    invokeBO "parm/stopServiceRequestTypeDetails/transactionalBo" using "csr_schema" for fastUpdate;
+    // Nudge parent CS request
+    move 'C1-CSREQ' to "F1-AutoTransitionBO/mo";
+    move "parm/custSvcReq/customerServiceRequestId" to "F1-AutoTransitionBO/primeKeyValues/pkValue1";
+    invokeBS 'F1-AutoTransitionBO' using "F1-AutoTransitionBO";
+*/
+
+/* 120: Check CS Request Person status (Main Person)
+
+    if ("string(parm/custSvcReq/custSvcReqPersonId) != $BLANK")
+         // Check CS Request Person status
+         declareBO "parm/stopServiceRequestTypeDetails/personBO" as 'csReqPer_schema2';
+         move "parm/custSvcReq/custSvcReqPersonId" to "csReqPer_schema2/custSvcReqPersonId";
+         invokeBO "parm/stopServiceRequestTypeDetails/personBO" using "csReqPer_schema2" for read;
+         if ("string(csReqPer_schema2/boStatus) = 'ERROR'")
+              // Retrieve exception MO log
+              move "string(csReqPer_schema2/custSvcReqPersonId)" to $custSvcReqPersonId;
+              invokeGroovy 'retrieveLastCSRequestPersonException';
+              // Read MO log
+              move 'C1-CSREQPER' to "F1-ReadMOLog/mo";
+              move "csReqPer_schema2/custSvcReqPersonId" to "F1-ReadMOLog/pkValue1";
+              move "$sequenceNumber" to "F1-ReadMOLog/sequenceNumber";
+              invokeBS 'F1-ReadMOLog' using "F1-ReadMOLog";
+              // Parse exception message
+              move "F1-ReadMOLog/logMessage" to "C1-PrMOLogPr/input/messageText";
+              invokeSS 'C1-PrMOLogPr' using "C1-PrMOLogPr";
+              terminate with error (11131, 11411 %1="csReqPer_schema2/personNameGroup/personName[nameType = 'PRIM']/entityName" %2="C1-PrMOLogPr/output/messageParm1" %3="C1-PrMOLogPr/output/messageParm2" %4="C1-PrMOLogPr/output/messageParm3" %5="C1-PrMOLogPr/output/messageParm4" %6="C1-PrMOLogPr/output/messageParm5" %7="C1-PrMOLogPr/output/messageParm6" %8="C1-PrMOLogPr/output/messageParm7" %9="C1-PrMOLogPr/output/messageParm8");
+         end-if;
+    end-if;
+*/
+
+/* 130: Check CS Request Account and CS Request Person (Other) status.
+
+    if ("string(parm/custSvcReq/custSvcReqAccountId) != $BLANK")
+         // Read CS Request Account
+         declareBO "parm/stopServiceRequestTypeDetails/accountBO" as 'csReqAcc_schema2';
+         move "parm/custSvcReq/custSvcReqAccountId" to "csReqAcc_schema2/custSvcReqAccountId";
+         invokeBO "parm/stopServiceRequestTypeDetails/accountBO" using "csReqAcc_schema2" for read;
+         // Check CS Request Person (Other) status
+         for ($accountPerson in "csReqAcc_schema2/accountPersonGroup/accountPerson[isMainCustomer != 'true']")
+              if ("string($accountPerson/custSvcReqPersonId) != $BLANK")
+                   declareBO "parm/stopServiceRequestTypeDetails/personBO" as 'csReqPer_schema2';
+                   move "$accountPerson/custSvcReqPersonId" to "csReqPer_schema2/custSvcReqPersonId";
+                   invokeBO "parm/stopServiceRequestTypeDetails/personBO" using "csReqPer_schema2" for read;
+                   if ("string(csReqPer_schema2/boStatus) = 'ERROR'")
+                        // Retrieve exception MO log
+                        move "string(csReqPer_schema2/custSvcReqPersonId)" to $custSvcReqPersonId;
+                        invokeGroovy 'retrieveLastCSRequestPersonException';
+                        // Read MO log
+                        move 'C1-CSREQPER' to "F1-ReadMOLog/mo";
+                        move "csReqPer_schema2/custSvcReqPersonId" to "F1-ReadMOLog/pkValue1";
+                        move "$sequenceNumber" to "F1-ReadMOLog/sequenceNumber";
+                        invokeBS 'F1-ReadMOLog' using "F1-ReadMOLog";
+                        // Parse exception message
+                        move "F1-ReadMOLog/logMessage" to "C1-PrMOLogPr/input/messageText";
+                        invokeSS 'C1-PrMOLogPr' using "C1-PrMOLogPr";
+                        terminate with error (11131, 11411 %1="csReqPer_schema2/personNameGroup/personName[nameType = 'PRIM']/entityName" %2="C1-PrMOLogPr/output/messageParm1" %3="C1-PrMOLogPr/output/messageParm2" %4="C1-PrMOLogPr/output/messageParm3" %5="C1-PrMOLogPr/output/messageParm4" %6="C1-PrMOLogPr/output/messageParm5" %7="C1-PrMOLogPr/output/messageParm6" %8="C1-PrMOLogPr/output/messageParm7" %9="C1-PrMOLogPr/output/messageParm8");
+                   end-if;
+                   move null to "csReqPer_schema2";
+              end-if;
+         end-for;
+         // Check CS Request Account status
+         if ("string(csReqAcc_schema2/boStatus) = 'ERROR'")
+              // Retrieve exception MO log
+              move "string(csReqAcc_schema2/custSvcReqAccountId)" to $custSvcReqAccountId;
+              invokeGroovy 'retrieveLastCSRequestAccountException';
+              // Read MO log
+              move 'C1-CSREQACCT' to "F1-ReadMOLog/mo";
+              move "csReqAcc_schema2/custSvcReqAccountId" to "F1-ReadMOLog/pkValue1";
+              move "$sequenceNumber" to "F1-ReadMOLog/sequenceNumber";
+              invokeBS 'F1-ReadMOLog' using "F1-ReadMOLog";
+              // Parse exception message
+              move "F1-ReadMOLog/logMessage" to "C1-PrMOLogPr/input/messageText";
+              invokeSS 'C1-PrMOLogPr' using "C1-PrMOLogPr";
+              terminate with error (11131, 11412 %1="csReqAcc_schema2/custSvcReqAccountId" %2="C1-PrMOLogPr/output/messageParm1" %3="C1-PrMOLogPr/output/messageParm2" %4="C1-PrMOLogPr/output/messageParm3" %5="C1-PrMOLogPr/output/messageParm4" %6="C1-PrMOLogPr/output/messageParm5" %7="C1-PrMOLogPr/output/messageParm6" %8="C1-PrMOLogPr/output/messageParm7" %9="C1-PrMOLogPr/output/messageParm8");
+         end-if;
+    end-if;
+*/
+
+/* 140: Check CS Request SAs status
+
+    // Check if CS Request SA was transitioned to Completed
+    if ("count(parm/custSvcReq/stopServiceCustSvcReqSAs/stopServiceCustSvcReqSA) > 0")
+         declareBO "parm/stopServiceRequestTypeDetails/stopSABO" as 'csReqSABO_schema';
+         for ($csReqSA in "parm/custSvcReq/stopServiceCustSvcReqSAs/stopServiceCustSvcReqSA")
+             // move null to "csReqSABO_schema";
+             
+               // invokeGroovy 'checkFa' ;
+           // terminate with error(90001 , 5 %1 ="$fieldId") ;
+               // move "$fieldId" to "C1FieldActivityPhysical/fieldActivityId" ;
+       //move 'CMMTRACT' to "C1FieldActivityPhysical/+fieldActivityCharacteristic/characteristicType";
+     // move "parm/stopServiceOptionsCustomElements/meterAction" to "C1FieldActivityPhysical/fieldActivityCharacteristic[last()]/characteristicValue" ;
+     // move '1' to "C1FieldActivityPhysical/fieldActivityCharacteristic[last()]/sequence" ;
+     //invokeBO 'C1FieldActivityPhysical' using "C1FieldActivityPhysical" for update ;
+    move null to "csReqSABO_schema";
+     move "$csReqSA/custSvcReqSAId" to "csReqSABO_schema/custSvcReqSAId";
+              invokeBO "parm/stopServiceRequestTypeDetails/stopSABO" using "csReqSABO_schema" for read;
+              if ("string(csReqSABO_schema/boStatus) != 'COMPLETED'")
+                   move 'false' to $hasLogException;
+                   move "string($csReqSA/custSvcReqSAId)" to $currCustSvcReqSAId;
+                   // Retrieve exception MO log
+                   move null to $saInformation;
+                   invokeGroovy 'checkCSRequestSALogException';
+                   if ("xs:boolean($hasLogException)")
+                        // Read MO log
+                        move 'C1-CSREQSA' to "F1-ReadMOLog/mo";
+                        move "$csReqSA/custSvcReqSAId" to "F1-ReadMOLog/pkValue1";
+                        move "$sequenceNumber" to "F1-ReadMOLog/sequenceNumber";
+                        invokeBS 'F1-ReadMOLog' using "F1-ReadMOLog";
+                        // Parse exception message
+                        move "F1-ReadMOLog/logMessage" to "C1-PrMOLogPr/input/messageText";
+                        invokeSS 'C1-PrMOLogPr' using "C1-PrMOLogPr";
+                        terminate with error (11131, 11907 %1="$saInformation" %2="C1-PrMOLogPr/output/messageParm1" %3="C1-PrMOLogPr/output/messageParm2" %4="C1-PrMOLogPr/output/messageParm3" %5="C1-PrMOLogPr/output/messageParm4" %6="C1-PrMOLogPr/output/messageParm5" %7="C1-PrMOLogPr/output/messageParm6" %8="C1-PrMOLogPr/output/messageParm7" %9="C1-PrMOLogPr/output/messageParm8");
+                   end-if;
+              end-if;
+         end-for;
+    end-if;
+*/
+
+/* 150: Revert switch to hold child CS request transitions
+
+    declareBO "parm/stopServiceRequestTypeDetails/transactionalBo" as 'csr_schema';
+    move "parm/custSvcReq/customerServiceRequestId" to "csr_schema/customerServiceRequestId";
+    invokeBO "parm/stopServiceRequestTypeDetails/transactionalBo" using "csr_schema" for read;
+    move 'false' to "csr_schema/childCanProceed";
+    invokeBO "parm/stopServiceRequestTypeDetails/transactionalBo" using "csr_schema" for fastUpdate;
+*/
+
+/* 160: Premise - Perform BO action
+
+    move "parm/stopServiceRequestTypeDetails/premiseControls/lifeSupportSensitiveLoad" to $lifeSupportSensitiveLoadUsage;
+    move "parm/stopServiceRequestTypeDetails/premiseControls/okToEnter" to $okToEnterUsage;
+    move "parm/stopServiceRequestTypeDetails/premiseControls/mrWarnUsage" to $mrWarnUsage;
+    move "parm/stopServiceRequestTypeDetails/premiseControls/mrInstruction" to $mrInstructionUsage;
+    move "parm/stopServiceRequestTypeDetails/premiseControls/mrInstructionDetails" to $mrInstructionDetailsUsage;
+    move "parm/stopServiceRequestTypeDetails/premiseControls/keyAtPremise" to $keyAtPremiseUsage;
+    // At least one to Premise information needs to be processed
+    if ("string($lifeSupportSensitiveLoadUsage) != 'C1NS' or string($okToEnterUsage) != 'C1NS' or string($mrWarnUsage) != 'C1NS' or string($mrInstructionUsage) != 'C1NS' or string($mrInstructionDetailsUsage) != 'C1NS' or string($keyAtPremiseUsage) != 'C1NS'")
+         move "parm/stopServiceRequestTypeDetails/premiseBO" to $csReqPremiseBO;
+         move null to "F1-RetrieveBOOption";
+         move "$csReqPremiseBO" to "F1-RetrieveBOOption/input/bo";
+         move 'C1RM' to "F1-RetrieveBOOption/input/boOptionType";
+         move 'false' to "F1-RetrieveBOOption/input/isMultiple";
+         invokeBS 'F1-RetrieveBOOption' using "F1-RetrieveBOOption";
+         if ("F1-RetrieveBOOption/output/values[1]/boOptionValue = $BLANK")
+              terminate with error (11002, 19101 %1="F1-RetrieveBOOption/input/boOptionType" %2="$csReqPremiseBO");
+         end-if;
+         move "F1-RetrieveBOOption/output/values[1]/boOptionValue" to $premiseBO;
+         // Process SP Based Premises
+         for ($premDetail in "parm/stpSvcPremBasedServicesDetails/premBasedSAs/premBasedSADetail")
+              if ("xs:boolean($premDetail/stopPremise)")
+                   declareBO "$premiseBO" as 'premiseBO';
+                   move "$premDetail/premId" to "premiseBO/premiseId";
+                   invokeBO "$premiseBO" using "premiseBO" for read;
+                   declareBO "$csReqPremiseBO" as 'csReqPremiseBO';
+                   move "premiseBO" to "csReqPremiseBO";
+                   move "premiseBO/version" to "csReqPremiseBO/premiseVersion";
+                   move "$csReqPremiseBO" to "csReqPremiseBO/bo";
+                   move "parm/custSvcReq/customerServiceRequestId" to "csReqPremiseBO/custSvcReqId";
+                   move "premiseBO" to "csReqPremiseBO/premiseCharGroup";
+                   move "premiseBO" to "csReqPremiseBO/premiseGeoGroup";
+                   move "premiseBO" to "csReqPremiseBO/premiseAltAddrGroup";
+                   // Life Support/Sensitive Load
+                   if ("string($lifeSupportSensitiveLoadUsage) != 'C1NS'")
+                        move "$premDetail/lifeSupportSensitiveLoad" to "csReqPremiseBO/lifeSupportSensitiveLoad";
+                        move "$premDetail/lifeSupportSensitiveLoadDescription" to "csReqPremiseBO/lifeSupportSensitiveLoadDescription";
+                   end-if;
+                   // Ok To Enter
+                   if ("string($okToEnterUsage) != 'C1NS'")
+                        move "$premDetail/isOKToEnter" to "csReqPremiseBO/isOKToEnter";
+                   end-if;
+                   // MR Warning
+                   if ("string($mrWarnUsage) != 'C1NS'")
+                        move "$premDetail/meterReadWarning" to "csReqPremiseBO/meterReadWarning";
+                   end-if;
+                   // MR Instruction
+                   if ("string($mrInstructionUsage) != 'C1NS'")
+                        move "$premDetail/meterReadInstruction" to "csReqPremiseBO/meterReadInstruction";
+                   end-if;
+                   // MR Instruction Details
+                   if ("string($mrInstructionDetailsUsage) != 'C1NS'")
+                        move "$premDetail/meterReadInstructionDetails" to "csReqPremiseBO/meterReadInstructionDetails";
+                   end-if;
+                   // Key At Premise
+                   if ("string($keyAtPremiseUsage) != 'C1NS'")
+                        move "$premDetail/isKey" to "csReqPremiseBO/isKey";
+                        move "$premDetail/key" to "csReqPremiseBO/key";
+                   end-if;
+                   invokeBO "$csReqPremiseBO" using "csReqPremiseBO" for add;
+                   move "csReqPremiseBO/custSvcReqPremiseId" to "parm/custSvcReq/stopCustSvcReqPremises/+stopCustSvcReqPremise/custSvcReqPremiseId";
+              end-if;
+         end-for;
+    end-if;
+*/
+
+/* 170: Move custom elements from Process Flow to CS Request
+
+    move "parm/custSvcReq/customerServiceRequestId" to "C1-StopServiceRequest/customerServiceRequestId";
+    move "parm/custSvcReq/customerServiceRequestId" to $customerServiceRequestId;
+    invokeBO 'C1-StopServiceRequest' using "C1-StopServiceRequest" for read;
+    
+    
+    move "parm/stopAccountDetailsCustomElements" to "C1-StopServiceRequest/customElements/personAccountDetails";
+    move "parm/stopAccountDetailsCustomElements/ifApayChecked" to "C1-StopServiceRequest/customElements/servicesToStop/ifApayChecked";
+    invokeBO 'C1-StopServiceRequest' using "C1-StopServiceRequest" for fastUpdate;
+    
+    move "parm/custSvcReq/customerServiceRequestId" to "C1-StopServiceRequest/customerServiceRequestId";
+    move "parm/custSvcReq/customerServiceRequestId" to $customerServiceRequestId;
+    invokeBO 'C1-StopServiceRequest' using "C1-StopServiceRequest" for read;
+    
+    // start change ABEHERA BUG: 1303098
+    //check if bo hodls the check box value
+    if ("string(C1-StopServiceRequest/customElements/servicesToStop/ifApayChecked) = 'false'")
+    	move "C1-StopServiceRequest/accountId" to $acctId;
+        move "$acctId" to "cmCancelApay/accountID";    
+        invokeSS 'cmCancelApay' using "cmCancelApay";
+        move "cmCancelApay/autoPayId" to $accountAutoPayId;
+    end-if;
+    
+    declareBO "parm/stopServiceRequestTypeDetails/transactionalBo" as 'csr_schema';
+    move "parm/custSvcReq/customerServiceRequestId" to "csr_schema/customerServiceRequestId";
+    invokeBO "parm/stopServiceRequestTypeDetails/transactionalBo" using "csr_schema" for read;
+    move "$CURRENT-DATE" to "csReqAcc_schema/accountAutomaticPaymentGroup/accountAutopay[accountAutoPayId = $accountAutoPayId]/endDate";
+    invokeBO "parm/stopServiceRequestTypeDetails/transactionalBo" using "csr_schema" for fastUpdate;
+    //// end change ABEHERA BUG: 1303098
+*/
+
+/* 175: Create To Do Entry for Bill Correction
+
+    //terminate with error(90003, 11 %1='Executed 175');
+    
+    move 'CM-ProcessFlowMasterConfig' to $processFlowMasterConfigBO;
+    move "parm/premiseId" to $premiseId;
+    move "parm/personId" to $personId;
+    
+    
+    move null to "CM-ProcessFlowMasterConfig";
+    move "$processFlowMasterConfigBO" to "CM-ProcessFlowMasterConfig/bo";
+    invokeBO 'CM-ProcessFlowMasterConfig' using "CM-ProcessFlowMasterConfig" for read;
+    
+    move "CM-ProcessFlowMasterConfig/billCorrectionParms/billCorrectionsTodoType" to $billCorrectionsToDoType;
+    move "CM-ProcessFlowMasterConfig/billCorrectionParms/premiseIdTodoTypeChar" to $premiseIdTodoTypeChar;
+    move "CM-ProcessFlowMasterConfig/billCorrectionParms/personIdTodoTypeChar" to $personIdTodoTypeChar;
+    move "CM-ProcessFlowMasterConfig/billCorrectionParms/correctionTypeTodoTypeChar" to $correctionTypeTodoTypeChar;
+    move "CM-ProcessFlowMasterConfig/billCorrectionParms/defaultCorrectionType" to $defaultCorrectionType;
+    move "CM-ProcessFlowMasterConfig/billCorrectionParms/correctionDateTodoTypeChar" to $correctionDateTodoTypeChar;
+    move "CM-ProcessFlowMasterConfig/billCorrectionParms/defaultCorrectionReason" to $defaultCorrectionReason;
+    move null to "CM-ProcessFlowMasterConfig";
+    
+    //MEC Change Start(Start Stop Date Validation) - Trideep
+    //terminate with error(90003, 11 %1="string(parm/stopServiceOptionsCustomElements/cmPanel1ValidationElements/cmIsMarkForCorrection) ");
+    
+    if("string(parm/stopServiceOptionsCustomElements/cmPanel1ValidationElements/cmIsMarkForCorrection) = 'true'")
+      
+        //move "$defaultCorrectionType" to "parm/cmCorrectionType";
+       // move "$defaultCorrectionReason" to "parm/cmCorrectionReason";
+        //terminate with error (90003, 1603 %1= "$defaultCorrectionType");
+        // Check if there is an open to-do
+        move null to "C1-TDS-OPEN";
+        move "$billCorrectionsToDoType" to "C1-TDS-OPEN/toDoType";
+        move "$premiseId" to "C1-TDS-OPEN/keyValue";
+        invokeBS 'C1-TDS-OPEN' using "C1-TDS-OPEN";
+    
+    //terminate with error(90003, 11 %1='Executed');
+    //terminate with error(90003, 11 %1="string(C1-TDS-OPEN/rowCount)");
+    
+        if ("xs:integer(C1-TDS-OPEN/rowCount) > 0")
+          //terminate with error (90003, 1603 %1= "$defaultCorrectionType");
+            terminate;
+        else
+             move null to "CMAddToDo";
+            move "$billCorrectionsToDoType" to "CMAddToDo/toDoType";
+            move 'O' to "CMAddToDo/toDoEntryStatus";
+            move "$PROCESS-DTTM" to "CMAddToDo/creationDateTime";
+            move "$USER" to "CMAddToDo/+toDoSortKeyValue/keyValue";
+           move "$premiseId" to "CMAddToDo/+toDoDrillKeyValue/keyValue";
+    		//terminate with error (90003, 1603 %1= "$billCorrectionsToDoType");
+            
+    		// Add To Do Characteristics
+    
+    		// Person ID
+    		move "$personIdTodoTypeChar" to "CMAddToDo/+toDoEntryCharacteristic/characteristicType";
+    
+            move null to "F1-CharTypePhysicalBO";
+            move "$personIdTodoTypeChar" to "F1-CharTypePhysicalBO/characteristicType";
+            invokeBO 'F1-CharTypePhysicalBO' using "F1-CharTypePhysicalBO" for read;
+    
+            if("string(F1-CharTypePhysicalBO/characteristicTypeFlag)='DFV'")
+              move "$personId" to "CMAddToDo/toDoEntryCharacteristic[last()]/characteristicValue";
+            end-if;
+            if("string(F1-CharTypePhysicalBO/characteristicTypeFlag)='FKV'")
+                move "$personId" to "CMAddToDo/toDoEntryCharacteristic[last()]/characteristicValueForeignKey1";
+            end-if;
+            if("string(F1-CharTypePhysicalBO/characteristicTypeFlag)='ADV'")
+                move "$personId" to "CMAddToDo/toDoEntryCharacteristic[last()]/adhocCharacteristicValue";
+            end-if;
+    		move '10' to "CMAddToDo/toDoEntryCharacteristic[last()]/sequence";
+    
+    		// Premise ID
+            move "$premiseIdTodoTypeChar" to "CMAddToDo/+toDoEntryCharacteristic/characteristicType";
+    
+            move null to "F1-CharTypePhysicalBO";
+            move "$premiseIdTodoTypeChar" to "F1-CharTypePhysicalBO/characteristicType";
+            invokeBO 'F1-CharTypePhysicalBO' using "F1-CharTypePhysicalBO" for read;
+    
+            if("string(F1-CharTypePhysicalBO/characteristicTypeFlag)='DFV'")
+              move "$premiseId" to "CMAddToDo/toDoEntryCharacteristic[last()]/characteristicValue";
+            end-if;
+            if("string(F1-CharTypePhysicalBO/characteristicTypeFlag)='FKV'")
+                move "$premiseId" to "CMAddToDo/toDoEntryCharacteristic[last()]/characteristicValueForeignKey1";
+            end-if;
+            if("string(F1-CharTypePhysicalBO/characteristicTypeFlag)='ADV'")
+                move "$premiseId" to "CMAddToDo/toDoEntryCharacteristic[last()]/adhocCharacteristicValue";
+            end-if;
+    		move '20' to "CMAddToDo/toDoEntryCharacteristic[last()]/sequence";
+    
+    		// Correction Type
+    		move "$correctionTypeTodoTypeChar" to "CMAddToDo/+toDoEntryCharacteristic/characteristicType";
+    
+            move null to "F1-CharTypePhysicalBO";
+            move "$correctionTypeTodoTypeChar" to "F1-CharTypePhysicalBO/characteristicType";
+            invokeBO 'F1-CharTypePhysicalBO' using "F1-CharTypePhysicalBO" for read;
+    
+            if("string(F1-CharTypePhysicalBO/characteristicTypeFlag)='DFV'")
+              move "$defaultCorrectionType" to "CMAddToDo/toDoEntryCharacteristic[last()]/characteristicValue";
+            end-if;
+            if("string(F1-CharTypePhysicalBO/characteristicTypeFlag)='FKV'")
+                move "$defaultCorrectionType" to "CMAddToDo/toDoEntryCharacteristic[last()]/characteristicValueForeignKey1";
+            end-if;
+            if("string(F1-CharTypePhysicalBO/characteristicTypeFlag)='ADV'")
+                move "$defaultCorrectionType" to "CMAddToDo/toDoEntryCharacteristic[last()]/adhocCharacteristicValue";
+            end-if;
+    		move '30' to "CMAddToDo/toDoEntryCharacteristic[last()]/sequence";
+            
+    		// Correction Date
+    		move "$correctionDateTodoTypeChar" to "CMAddToDo/+toDoEntryCharacteristic/characteristicType";
+    		
+            move null to "F1-CharTypePhysicalBO";
+            move "$correctionDateTodoTypeChar" to "F1-CharTypePhysicalBO/characteristicType";
+            invokeBO 'F1-CharTypePhysicalBO' using "F1-CharTypePhysicalBO" for read;
+            move "parm/svcOptStartServiceDetails/serviceStartDate" to $inputString;
+            invokeGroovy 'getCorrectFormatDate';
+            
+            if("string(F1-CharTypePhysicalBO/characteristicTypeFlag)='DFV'")
+                move "$outputDate" to "CMAddToDo/toDoEntryCharacteristic[last()]/characteristicValue";
+            end-if;
+            if("string(F1-CharTypePhysicalBO/characteristicTypeFlag)='FKV'")
+                move "$outputDate" to "CMAddToDo/toDoEntryCharacteristic[last()]/characteristicValueForeignKey1";
+            end-if;
+            if("string(F1-CharTypePhysicalBO/characteristicTypeFlag)='ADV'")
+                move "$outputDate" to "CMAddToDo/toDoEntryCharacteristic[last()]/adhocCharacteristicValue";
+            end-if;
+    		move '40' to "CMAddToDo/toDoEntryCharacteristic[last()]/sequence";
+           move '90007' to "CMAddToDo/messageCategory" ;
+    move '674'  to "CMAddToDo/messageNumber" ;
+    move '1' to "CMAddToDo/+toDoMessageParameter/sequence" ;
+    move "$premiseId" to "CMAddToDo/toDoMessageParameter[last()]/messageParameterValue" ;
+            
+            invokeSS 'CMAddToDo' using "CMAddToDo";
+    		//terminate with error(90003, 25 %1="string(CMAddToDo/toDoEntryId)");
+     move "CMAddToDo/toDoEntryId" to "F1-ToDoEntry/toDoEntryId";
+         invokeBO 'F1-ToDoEntry' using "F1-ToDoEntry" for read;
+       
+    		move "CMAddToDo/toDoEntryId" to "F1-ToDoEntry/toDoDrillKeyValue[keyValue=$premiseId]/keyValue" ;
+    		
+    		invokeBO 'F1-ToDoEntry' using "F1-ToDoEntry" for update;
+    //terminate with error(90003, 25 %1="CMAddToDo/toDoEntryId");
+    
+        end-if; 
+    end-if;
+    
+    //terminate with error(90003, 25 %1='Executed 175');
+*/
+
+// 180: Common Functions
+
+    void retrieveLastCSRequestPersonException(){
+        PreparedStatementQuery query = createPreparedStatement("""
+            SELECT
+              A.SEQNO,
+              A.MESSAGE_CAT_NBR,
+              A.MESSAGE_NBR,
+              A.LOG_DTTM
+            FROM 
+              C1_CS_REQ_PER_LOG A
+            WHERE
+              A.CS_REQ_PER_ID = :custSvcReqPersonId
+              AND A.LOG_ENTRY_TYPE_FLG = 'F1EX'
+            ORDER BY A.LOG_DTTM DESC
+        """, 'Retrieve CS Request Person Exception Log');
+        query.bindEntity("custSvcReqPersonId", new CustomerServiceRequestPerson_Id(getStringScriptVariable('custSvcReqPersonId')).getEntity()); 
+        SQLResultRow row = query.firstRow();
+        if (isNull(row)) return;
+        setIntegerScriptVariable 'sequenceNumber', row.getInteger('SEQNO');
+    }
+    
+    void retrieveLastCSRequestAccountException(){
+        PreparedStatementQuery query = createPreparedStatement("""
+            SELECT
+              A.SEQNO,
+              A.MESSAGE_CAT_NBR,
+              A.MESSAGE_NBR,
+              A.LOG_DTTM
+            FROM 
+              C1_CS_REQ_ACCT_LOG A
+            WHERE
+              A.CS_REQ_ACCT_ID = :custSvcReqAccountId
+              AND A.LOG_ENTRY_TYPE_FLG = 'F1EX'
+            ORDER BY A.LOG_DTTM DESC
+        """, 'Retrieve CS Request Account Exception Log');
+        query.bindEntity("custSvcReqAccountId", new CustomerServiceRequestAccount_Id(getStringScriptVariable('custSvcReqAccountId')).getEntity()); 
+        SQLResultRow row = query.firstRow();
+        if (isNull(row)) return;
+        setIntegerScriptVariable 'sequenceNumber', row.getInteger('SEQNO');
+    }
+    
+    void checkCSRequestSALogException() { 
+        PreparedStatementQuery query = createPreparedStatement("""
+            SELECT
+                A.SEQNO,
+                A.LOG_DTTM
+            FROM
+                C1_CS_REQ_SA_LOG A
+            WHERE
+                A.CS_REQ_SA_ID = :custSvcReqSAId
+                AND A.LOG_ENTRY_TYPE_FLG = 'F1EX'
+            ORDER BY A.LOG_DTTM DESC
+        """, 'Retrieve CS Request SA Exception Log');
+    
+        CustomerServiceRequestServiceAgreement customerServiceRequestServiceAgreement = new CustomerServiceRequestServiceAgreement_Id(getStringScriptVariable('currCustSvcReqSAId')).getEntity()
+        query.bindEntity("custSvcReqSAId", customerServiceRequestServiceAgreement);
+        SQLResultRow row = query.firstRow();
+      
+        setBooleanScriptVariable("hasLogException", false);
+        if (isNull(row)) return;
+        setStringScriptVariable("saInformation", customerServiceRequestServiceAgreement.fetchServiceAgreement().getInfo());      
+        setIntegerScriptVariable("sequenceNumber", row.getInteger('SEQNO'));
+        setBooleanScriptVariable("hasLogException", true);
+    }
+
+// 190: Format Date Time to MM-DD-YYYY
+
+    public void getCorrectFormatDate(){
+      
+        String stringDate = evalString('$inputString');
+       
+        DateFormat dateFormat = new DateFormat("MM-dd-yyyy");
+        DateFormat dateFormat2 = new DateFormat("yyyy-MM-dd"); 
+            
+        if (Date.isValidDateString(stringDate, dateFormat)){
+            setStringScriptVariable('outputDate', stringDate);
+            return;
+        }else if (Date.isValidDateString(stringDate, dateFormat2)){
+            setStringScriptVariable('outputDate', dateFormat.format(dateFormat2.parseDate(stringDate))); 
+            return;
+        }
+    
+        setStringScriptVariable('outputDate', 'NA');
+    }
+
+// 212: check field activity
+
+    public void checkFa(){
+    String saId = evalString('$csReqSA/custSvcReqSAId') ;
+    PreparedStatementQuery query = createPreparedStatement("""
+    select  FA_ID from Ci_sa
+    join Ci_sa_sp on CI_SA.SA_ID = CI_SA_SP.SA_ID
+    join ci_fa on ci_sa_sp.SP_ID = CI_FA.SP_ID
+    where Ci_sa.SA_ID = :saID
+    ORDER BY CI_FA.CRE_DTTM DESC
+        """, "Check FA")
+       query.bindString("saID",saId, "SA_ID");
+       SQLResultRow row = query.firstRow();
+       if(row!=null)
+       {
+       setStringScriptVariable("fieldId", row.getString("FA_ID").trim());
+       }
+       }
+
+}
